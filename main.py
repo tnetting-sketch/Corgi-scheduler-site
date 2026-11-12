@@ -3,10 +3,10 @@ from dataclasses import dataclass
 
 set_website_title("Corgi Scheduler")
 set_site_information(
-    author = "Tyler Netting"
-    description = "Schedulerer that finds days all members of a group are available"
-    sources = "Drafter Docs,"
-    planning = "plan.pdf"
+    author = "Tyler Netting",
+    description = "Schedulerer that finds days all members of a group are available",
+    sources = "Drafter Docs,",
+    planning = "plan.pdf",
     links = []
     )
 # -------------------------
