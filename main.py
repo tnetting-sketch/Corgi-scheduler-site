@@ -17,14 +17,13 @@ set_site_information(
 class Person:
     name: str
     schedule: list[str]
-    meeting_purpose: str
-    meeting_location: str
-
-
+    
 @dataclass
 class State:
     group_name: str
     people: list[Person]
+    meeting_purpose: str
+    meeting_location: str
 
 
 # -------------------------
