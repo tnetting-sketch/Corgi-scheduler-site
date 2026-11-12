@@ -43,7 +43,7 @@ def index(state: State) -> Page:
         Button("View Group", "view_group"),
         Button("Edit Availability", "edit_page"),
         Button("Remove Person", "remove_page"),
-        Button("Check Group Availability", "available")
+        Button("Check Group Availability", "available"),
         Button("Edit Group Details", "group_details_page")
     ])
 
