@@ -142,7 +142,7 @@ def add_person(state: State, name: str, days: str) -> Page:
 
 @route
 def view_group(state: State) -> Page:
-        '''Args: state:State
+    '''Args: state:State
        Takes the website's state and returns a Page
        where the user can add a view their group and
        what days the members of the group are available.
@@ -173,7 +173,7 @@ def view_group(state: State) -> Page:
 
 @route
 def edit_page(state: State) -> Page:
-        '''Args: state:State
+    '''Args: state:State
        Takes the website's state and returns a Page
        where the user can use the edit route.
        Returns: Page'''
