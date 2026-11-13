@@ -109,7 +109,7 @@ def add_person_page(state: State) -> Page:
 
 @route
 def add_person(state: State, name: str, days: str) -> Page:
-        '''Args: state:State
+    '''Args: state:State
        Takes the website's state and returns a Page
        where the user can add a person to their group.
        Also includes that person's schedule
