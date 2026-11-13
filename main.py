@@ -210,6 +210,33 @@ def remove(state: State, target_name: str) -> Page:
 
     return view_group(state)
 
+@route
+def save_details(state: State,
+                 meeting_purpose: str,
+                 meeting_location: str) -> Page:
+
+    if meeting_purpose.strip() != "":
+        state.meeting_purpose = meeting_purpose
+
+    if meeting_location.strip() != "":
+        state.meeting_location = meeting_location
+
+    return index(state)
+    # Display the results
+    content = [
+        Header("Group Availability"),
+        "Days when everyone is available:"
+    ]
+
+    if len(common_days) == 0:
+        content.append("There are no days when everyone is available.")
+    else:
+        for day in common_days:
+            content.append(day)
+
+    content.append(Button("Home", "index"))
+
+    return Page(state, content)
 
 # -------------------------
 # CHECK AVAILABILITY
@@ -239,32 +266,7 @@ def available(state: State) -> Page:
                 days_to_keep.append(day)
 
         common_days = days_to_keep
-@route
-def group_details_page(state: State) -> Page:
-    return Page(state, [
-        Header("Group Details"),
-        "What is this meeting for?",
-        TextBox("meeting_purpose"),
-        "Where will you meet?",
-        TextBox("meeting_location"),
-        Button("Save Details", "save_details"),
-        Button("Home", "index")
-    ])
-
-
-@route
-def save_details(state: State,
-                 meeting_purpose: str,
-                 meeting_location: str) -> Page:
-
-    if meeting_purpose.strip() != "":
-        state.meeting_purpose = meeting_purpose
-
-    if meeting_location.strip() != "":
-        state.meeting_location = meeting_location
-
-    return index(state)
-    # Display the results
+      # Display the results
     content = [
         Header("Group Availability"),
         "Days when everyone is available:"
@@ -279,8 +281,6 @@ def save_details(state: State,
     content.append(Button("Home", "index"))
 
     return Page(state, content)
-
-
 # -------------------------
 # START APPLICATION
 # -------------------------
