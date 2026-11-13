@@ -5,7 +5,7 @@ set_website_title("Corgi Scheduler")
 set_site_information(
     author = "Tyler Netting",
     description = "Schedulerer that finds days all members of a group are available",
-    sources = "Drafter Docs,",
+    sources = "Drafter Docs, Allowed LLM",
     planning = "plan.pdf",
     links = []
     )
@@ -18,6 +18,8 @@ class Person:
     name: str
     schedule: list[str]
     
+
+
 @dataclass
 class State:
     group_name: str
@@ -32,6 +34,10 @@ class State:
 
 @route
 def index(state: State) -> Page:
+    '''Args: state:State
+       Takes user input and then takes them from the home page
+       to wherever they wanted to go using the websites buttons
+       Returns: Page'''
     return Page(state, [
         Header("Group Availability Scheduler"),
         "Find days when your whole group is free!",
@@ -53,6 +59,10 @@ def index(state: State) -> Page:
 
 @route
 def create_group_page(state: State) -> Page:
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can specify the name of their group
+       Returns: Page'''
     return Page(state, [
         Header("Create a Group"),
         "Enter your group name:",
@@ -64,6 +74,11 @@ def create_group_page(state: State) -> Page:
 
 @route
 def create_group(state: State, group_name: str) -> Page:
+    '''Args: state:State
+             group_name:str
+       Takes user input and then takes the name the inputted
+       and returns it as a valid version of the input
+       Returns: Page'''
     if group_name.strip() != "":
         state.group_name = group_name.strip()
 
@@ -76,6 +91,10 @@ def create_group(state: State, group_name: str) -> Page:
 
 @route
 def add_person_page(state: State) -> Page:
+    '''Args: state:State
+       Takes the website's state and takes the user
+       to the add person route
+       Returns: Page'''
     return Page(state, [
         Header("Add a Person"),
         "Enter the person's name:",
@@ -90,7 +109,11 @@ def add_person_page(state: State) -> Page:
 
 @route
 def add_person(state: State, name: str, days: str) -> Page:
-
+        '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can add a person to their group.
+       Also includes that person's schedule
+       Returns: Page'''
     if name.strip() == "":
         return Page(state, [
             "Please enter a name.",
@@ -119,7 +142,11 @@ def add_person(state: State, name: str, days: str) -> Page:
 
 @route
 def view_group(state: State) -> Page:
-
+        '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can add a view their group and
+       what days the members of the group are available.
+       Returns: Page'''
     content = [
         Header("Group Members"),
         "Group: " + state.group_name,
@@ -146,6 +173,10 @@ def view_group(state: State) -> Page:
 
 @route
 def edit_page(state: State) -> Page:
+        '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can use the edit route.
+       Returns: Page'''
     return Page(state, [
         Header("Edit Availability"),
         "Enter the name of the person you want to edit:",
@@ -161,7 +192,11 @@ def edit_page(state: State) -> Page:
 @route
 def edit(state: State, target_name: str,
          new_days: str) -> Page:
-
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can edit a person in their group's
+       schedule.
+       Returns: Page'''
     for person in state.people:
         if person.name.lower() == target_name.strip().lower():
 
@@ -188,6 +223,11 @@ def edit(state: State, target_name: str,
 
 @route
 def remove_page(state: State) -> Page:
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user choose a memeber of their group
+       to remove.
+       Returns: Page'''
     return Page(state, [
         Header("Remove a Person"),
         "Enter the name of the person to remove:",
@@ -199,7 +239,13 @@ def remove_page(state: State) -> Page:
 
 @route
 def remove(state: State, target_name: str) -> Page:
-
+    '''Args: state:State
+             target_name:str
+       Takes the website's state and returns a Page
+       where the user can remove a person from their group
+       by creating a new list without the removed person
+       using the target's name and a for loop.
+       Returns: Page'''
     new_list = []
 
     for person in state.people:
@@ -211,10 +257,31 @@ def remove(state: State, target_name: str) -> Page:
     return view_group(state)
 
 @route
+def group_details_page(state: State) -> Page:
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can edit what and where the meeting
+       will be.
+       Returns: Page'''
+    return Page(state, [
+        Header("Group Details"),
+        "What is this meeting for?",
+        TextBox("meeting_purpose"),
+        "Where will you meet?",
+        TextBox("meeting_location"),
+        Button("Save Details", "save_details"),
+        Button("Home", "index")
+    ])
+
+
+@route
 def save_details(state: State,
                  meeting_purpose: str,
                  meeting_location: str) -> Page:
-
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can save their meeting purpose and location
+       Returns: Page'''
     if meeting_purpose.strip() != "":
         state.meeting_purpose = meeting_purpose
 
@@ -244,7 +311,12 @@ def save_details(state: State,
 
 @route
 def available(state: State) -> Page:
-
+    '''Args: state:State
+       Takes the website's state and returns a Page
+       where the user can see who in their group are available on
+       what day/days. Returns "You need to add people first!" if the
+       group is empty.
+       Returns: Page'''
     if len(state.people) == 0:
         return Page(state, [
             Header("Group Availability"),
