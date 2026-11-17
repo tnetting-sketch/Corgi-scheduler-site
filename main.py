@@ -7,7 +7,7 @@ set_site_information(
     description = "Schedulerer that finds days all members of a group are available",
     sources = "Drafter Docs+Allowed LLM",
     planning = "plan.pdf",
-    links = []
+    links = [https://github.com/tnetting-sketch/Corgi-scheduler-site]
     )
 # -------------------------
 # DATA CLASSES
