@@ -1,7 +1,6 @@
 from drafter import *
 from dataclasses import dataclass
 
-set_website_style("sakura")
 
 set_website_title("Corgi Scheduler")
 set_site_information(
