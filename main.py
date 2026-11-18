@@ -1,6 +1,8 @@
 from drafter import *
 from dataclasses import dataclass
 
+set_website_style("sakura")
+
 set_website_title("Corgi Scheduler")
 set_site_information(
     author = "Tyler Netting",
@@ -353,6 +355,141 @@ def available(state: State) -> Page:
     content.append(Button("Home", "index"))
 
     return Page(state, content)
+
+# Unit Tests
+
+
+# CREATE GROUP
+state = State("Old Group", [], "", "")
+create_group(state, "Math Club")
+assert_equal(state.group_name, "Math Club")
+
+state = State("Old Group", [], "", "")
+create_group(state, "   ")
+assert_equal(state.group_name, "Old Group")
+
+
+# ADD PERSON
+state = State("Group", [], "", "")
+add_person(state, "Alice", "Monday, Wednesday")
+assert_equal(len(state.people), 1)
+assert_equal(state.people[0].name, "Alice")
+assert_equal(state.people[0].schedule, ["Monday", "Wednesday"])
+
+state = State("Group", [], "", "")
+add_person(state, "", "Monday")
+assert_equal(len(state.people), 0)
+
+
+# VIEW GROUP
+state = State("Study Group", [
+    Person("Alice", ["Monday", "Wednesday"]),
+    Person("Bob", ["Monday", "Friday"])
+], "", "")
+
+result = view_group(state)
+assert_equal("Group: Study Group" in result.content, True)
+assert_equal("Number of people: 2" in result.content, True)
+assert_equal("Name: Alice" in result.content, True)
+assert_equal("Name: Bob" in result.content, True)
+
+
+# EDIT AVAILABILITY
+state = State("Group", [
+    Person("Alice", ["Monday", "Wednesday"])
+], "", "")
+
+edit(state, "Alice", "Tuesday, Friday")
+assert_equal(state.people[0].schedule, ["Tuesday", "Friday"])
+
+edit(state, "Bob", "Monday")
+assert_equal(state.people[0].schedule, ["Tuesday", "Friday"])
+
+
+# REMOVE PERSON
+state = State("Group", [
+    Person("Alice", ["Monday"]),
+    Person("Bob", ["Friday"])
+], "", "")
+
+remove(state, "Alice")
+assert_equal(len(state.people), 1)
+assert_equal(state.people[0].name, "Bob")
+
+
+# GROUP DETAILS
+state = State("Group", [], "Old Purpose", "Old Location")
+save_details(state, "Study Session", "Library")
+assert_equal(state.meeting_purpose, "Study Session")
+assert_equal(state.meeting_location, "Library")
+
+save_details(state, "", "")
+assert_equal(state.meeting_purpose, "Study Session")
+assert_equal(state.meeting_location, "Library")
+
+
+# CHECK AVAILABILITY
+state = State("Group", [
+    Person("Alice", ["Monday", "Wednesday"]),
+    Person("Bob", ["Monday", "Friday"]),
+    Person("Charlie", ["Monday", "Tuesday"])
+], "", "")
+
+result = available(state)
+assert_equal("Monday" in result.content, True)
+assert_equal("Wednesday" in result.content, False)
+assert_equal("Friday" in result.content, False)
+
+# No common availability
+state = State("Group", [
+    Person("Alice", ["Monday"]),
+    Person("Bob", ["Friday"])
+], "", "")
+
+result = available(state)
+assert_equal(
+    "There are no days when everyone is available."
+    in result.content, True
+)
+
+# Empty group
+state = State("Group", [], "", "")
+result = available(state)
+assert_equal("You need to add people first!" in result.content, True)
+
+
+# CREATE GROUP PAGE
+state = State("Math Club", [], "", "")
+result = create_group_page(state)
+assert_equal(result.state.group_name, "Math Club")
+
+
+# ADD PERSON PAGE
+result = add_person_page(state)
+assert_equal(result.state.group_name, "Math Club")
+
+
+# EDIT PAGE
+result = edit_page(state)
+assert_equal(result.state.group_name, "Math Club")
+
+
+# REMOVE PAGE
+result = remove_page(state)
+assert_equal(result.state.group_name, "Math Club")
+
+
+# GROUP DETAILS PAGE
+result = group_details_page(state)
+assert_equal(result.state.group_name, "Math Club")
+
+
+# HOME PAGE
+result = index(state)
+assert_equal(result.state.group_name, "Math Club")
+assert_equal(len(result.state.people), 0)
+
+
 # -------------------------
 # START APPLICATION
 # -------------------------
